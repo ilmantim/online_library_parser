@@ -104,17 +104,18 @@ def main():
     images_directory = os.path.join(base_directory, "images")
     os.makedirs(images_directory, exist_ok=True)
      
-    
     for book_id in range(start_id, end_id + 1):
         try:
             url = "https://tululu.org/"
             
             book_text = get_book_text_by_id(url, book_id)
             book_html = get_book_html_by_id(url, book_id)
+            book_url = f"{url}b{book_id}/"
 
             book_properties = parse_book_page(book_html)
             book_filename = f"{book_id}.{book_properties['title']}"
-            book_cover_url = urljoin(url, book_properties['cover_tag'])
+
+            book_cover_url = urljoin(book_url, book_properties['cover_tag'])
             
             download_txt(book_text, book_filename, books_directory)
             download_image(book_cover_url, images_directory)
