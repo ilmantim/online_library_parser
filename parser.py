@@ -12,7 +12,7 @@ def check_for_redirect(response):
         raise requests.exceptions.HTTPError()
 
 
-def get_book_by_id(url, book_id):
+def get_book_text_by_id(url, book_id):
     book_text_url = f"{url}txt.php"
     params = {
         "id": book_id
@@ -21,14 +21,18 @@ def get_book_by_id(url, book_id):
     check_for_redirect(response)
     response.raise_for_status()
     book_text = response.text
+ 
+    return book_text
 
+
+def get_book_html_by_id(url, book_id):
     book_url = f"{url}b{book_id}/"
     response = requests.get(book_url)
     check_for_redirect(response)
     response.raise_for_status()
     book_html = response.text
     
-    return book_text, book_html
+    return book_html
 
 
 def parse_book_page(html):
@@ -105,7 +109,8 @@ def main():
         try:
             url = "https://tululu.org/"
             
-            book_text, book_html = get_book_by_id(url, book_id)
+            book_text = get_book_text_by_id(url, book_id)
+            book_html = get_book_html_by_id(url, book_id)
 
             book_properties = parse_book_page(book_html)
             book_filename = f"{book_id}.{book_properties['title']}"
