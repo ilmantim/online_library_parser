@@ -94,6 +94,9 @@ def main():
                     print ('No connection...Another try in 5 sec')
                     time.sleep(5)
         
+        except requests.exceptions.HTTPError:
+            print(f'There is no page {page_num} to download.\n')
+
         except requests.exceptions.ConnectionError:
             print ('No connection...Another try in 5 sec')
             time.sleep(5)
