@@ -18,8 +18,8 @@ def main():
     parser = argparse.ArgumentParser(
         description='This program allows to download books from tululu.org.'
     )
-    parser.add_argument('--start_page', type=int, default=1, help='Enter the id of the first page')
-    parser.add_argument('--end_page', type=int, default=1, help='Enter the id of the last page')    
+    parser.add_argument('--start_page', type=int, default=1, help='Enter the number of the first page')
+    parser.add_argument('--end_page', type=int, default=10, help='Enter the number of the last page')    
     parser.add_argument(
         '--dest_folder',
         help='Enter the directory for text, images, json to be stored in',
