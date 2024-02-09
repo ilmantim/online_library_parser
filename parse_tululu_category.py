@@ -13,24 +13,35 @@ from parser import check_for_redirect, parse_book_page, get_book_text_by_id, \
     
 
 def main():
+    base_directory = os.path.dirname(os.path.abspath(__file__))
+
     parser = argparse.ArgumentParser(
         description='This program allows to download books from tululu.org.'
     )
     parser.add_argument('--start_page', type=int, default=1, help='Enter the id of the first page')
-    parser.add_argument('--end_page', type=int, default=2, help='Enter the id of the last page')            
+    parser.add_argument('--end_page', type=int, default=1, help='Enter the id of the last page')    
+    parser.add_argument(
+        '--dest_folder',
+        help='Enter the directory for text, images, json to be stored in',
+        default=base_directory,
+        type=str
+    )
+    parser.add_argument('--skip_imgs', help='Skips images downloading',
+                        default=False, action='store_true')
+    parser.add_argument('--skip_txt', help='Skips txt downloading',
+                        default=False, action='store_true')
+            
     args = parser.parse_args()
-
-    base_directory = os.path.dirname(os.path.abspath(__file__))
     
-    books_directory = os.path.join(base_directory, "books")
+    books_directory = os.path.join(args.dest_folder, "books")
     os.makedirs(books_directory, exist_ok=True)
     
-    images_directory = os.path.join(base_directory, "images")
+    images_directory = os.path.join(args.dest_folder, "images")
     os.makedirs(images_directory, exist_ok=True)
 
     downloaded_books = []
 
-    for page_num in range (args.start_page, args.end_page):
+    for page_num in range (args.start_page, args.end_page + 1):
         try:
             science_fiction_url = "https://tululu.org/l55/"
             science_fiction_url_by_pages = f'{science_fiction_url}{page_num}'
@@ -61,8 +72,11 @@ def main():
         
                     book_cover_url = urljoin(book_url, book_properties['cover_tag'])
                     
-                    download_txt(book_text, book_filename, books_directory)
-                    download_image(book_cover_url, images_directory)
+                    if not args.skip_txt:
+                        download_txt(book_text, book_filename, books_directory)
+
+                    if not args.skip_imgs:
+                        download_image(book_cover_url, images_directory)
 
                 except requests.exceptions.HTTPError:
                     print(f'There is no Book {book_id} to download.\n')
@@ -75,7 +89,8 @@ def main():
             print ('No connection...Another try in 5 sec')
             time.sleep(5)
 
-    with open("downloaded_books.json", "w", encoding='utf-8') as file:
+    downloaded_books_path = os.path.join(args.dest_folder, "downloaded_books.json")
+    with open(downloaded_books_path, "w", encoding='utf-8') as file:
         json.dump(downloaded_books, file, ensure_ascii=False)
 
 
