@@ -72,7 +72,6 @@ def main():
                     book_text = get_book_text_by_id(url, book_id)
                     book_html = get_book_html_by_id(url, book_id)
                     book_url = f'{url}/b{book_id}/'
-                    print (book_url)
         
                     book_properties = parse_book_page(book_html)
                     downloaded_books.append(book_properties)
