@@ -1,7 +1,9 @@
+import argparse
 import os
 import json
 import time
 import re
+
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
@@ -11,6 +13,13 @@ from parser import check_for_redirect, parse_book_page, get_book_text_by_id, \
     
 
 def main():
+    parser = argparse.ArgumentParser(
+        description='This program allows to download books from tululu.org.'
+    )
+    parser.add_argument('--start_page', type=int, default=1, help='Enter the id of the first page')
+    parser.add_argument('--end_page', type=int, default=2, help='Enter the id of the last page')            
+    args = parser.parse_args()
+
     base_directory = os.path.dirname(os.path.abspath(__file__))
     
     books_directory = os.path.join(base_directory, "books")
@@ -21,7 +30,7 @@ def main():
 
     downloaded_books = []
 
-    for page_num in range (1, 2):
+    for page_num in range (args.start_page, args.end_page):
         try:
             science_fiction_url = "https://tululu.org/l55/"
             science_fiction_url_by_pages = f'{science_fiction_url}{page_num}'
@@ -44,6 +53,7 @@ def main():
                     book_text = get_book_text_by_id(url, book_id)
                     book_html = get_book_html_by_id(url, book_id)
                     book_url = f'{url}/b{book_id}/'
+                    print (book_url)
         
                     book_properties = parse_book_page(book_html)
                     downloaded_books.append(book_properties)
