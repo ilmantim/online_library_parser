@@ -23,8 +23,6 @@ def main():
 
     for page_num in range (1, 2):
         try:
-            url = "https://tululu.org/"
-    
             science_fiction_url = "https://tululu.org/l55/"
             science_fiction_url_by_pages = f'{science_fiction_url}{page_num}'
             response = requests.get(science_fiction_url_by_pages)
@@ -32,13 +30,17 @@ def main():
             response.raise_for_status()
             
             soup = BeautifulSoup(response.text, 'lxml')
-            books_id = soup.find_all(class_='bookimage')
-        
-            for id in books_id:
+            selector = ".bookimage a"
+            books = soup.select(selector)
+    
+            for book in books:
                 try:
-                    href = id.find('a')['href']
+
+                    href = book['href']
                     book_id = re.findall(r'\d+', href)[0]
-                    print(book_id)
+
+                    url = "https://tululu.org/"
+        
                     book_text = get_book_text_by_id(url, book_id)
                     book_html = get_book_html_by_id(url, book_id)
                     book_url = f'{url}/b{book_id}/'

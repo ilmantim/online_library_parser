@@ -38,19 +38,23 @@ def get_book_html_by_id(url, book_id):
 def parse_book_page(html):
     soup = BeautifulSoup(html, 'lxml')
 
-    title_tag = soup.find('h1')
+    title_author_selector = 'h1'
+    title_tag = soup.select_one(title_author_selector)
     title_text = title_tag.text
     title, author = title_text.split('::')
     title = title.strip()
     author = author.strip()
 
-    cover_tag = soup.find(class_='bookimage').find('img')['src']
+    cover_selector = '.bookimage img'
+    cover_tag = soup.select_one(cover_selector)['src']
 
-    genre_tags = soup.find('span', class_='d_book').find_all('a')
+    genres_selector = 'span.d_book a'
+    genre_tags = soup.select(genres_selector)
     genres = [genre.text for genre in genre_tags]
 
-    comment_tags = soup.find_all(class_='texts')
-    comments = [text_tag.find(class_='black').text for text_tag in comment_tags]
+    comments_selector = '.texts .black'
+    comment_tags = soup.select(comments_selector)
+    comments = [comment_tag.text for comment_tag in comment_tags]
     comments = '\n'.join(comments)
     
     return {
@@ -60,6 +64,7 @@ def parse_book_page(html):
         'genres': genres,
         'comments': comments
     }
+
 
 
 def download_txt(book_text, filename, folder):
