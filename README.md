@@ -32,7 +32,7 @@ The script parse_tululu_category.py for downloading science fiction books accept
 
 ## How to run Scripts
 
-Run the script using the following command:
+Run the scripts using the following command:
 
 ```bash
 python parser.py

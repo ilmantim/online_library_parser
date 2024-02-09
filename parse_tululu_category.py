@@ -18,19 +18,28 @@ def main():
     parser = argparse.ArgumentParser(
         description='This program allows to download books from tululu.org.'
     )
-    parser.add_argument('--start_page', type=int, default=1, help='Enter the number of the first page')
-    parser.add_argument('--end_page', type=int, default=10, help='Enter the number of the last page')    
+    parser.add_argument(
+        '--start_page', type=int, default=1, 
+        help='Enter the number of the first page'
+    )
+    parser.add_argument(
+        '--end_page', type=int, default=10, 
+        help='Enter the number of the last page'
+    )    
     parser.add_argument(
         '--dest_folder',
         help='Enter the directory for text, images, json to be stored in',
         default=base_directory,
         type=str
     )
-    parser.add_argument('--skip_imgs', help='Skips images downloading',
-                        default=False, action='store_true')
-    parser.add_argument('--skip_txt', help='Skips txt downloading',
-                        default=False, action='store_true')
-            
+    parser.add_argument(
+        '--skip_imgs', help='Skips images downloading',
+        default=False, action='store_true'
+    )
+    parser.add_argument(
+        '--skip_txt', help='Skips txt downloading',
+        default=False, action='store_true'
+    )       
     args = parser.parse_args()
     
     books_directory = os.path.join(args.dest_folder, "books")
@@ -55,7 +64,6 @@ def main():
     
             for book in books:
                 try:
-
                     href = book['href']
                     book_id = re.findall(r'\d+', href)[0]
 
@@ -70,7 +78,9 @@ def main():
                     downloaded_books.append(book_properties)
                     book_filename = f"{book_id}.{book_properties['title']}"
         
-                    book_cover_url = urljoin(book_url, book_properties['cover_tag'])
+                    book_cover_url = urljoin(
+                        book_url, book_properties['cover_tag']
+                    )
                     
                     if not args.skip_txt:
                         download_txt(book_text, book_filename, books_directory)
@@ -89,7 +99,9 @@ def main():
             print ('No connection...Another try in 5 sec')
             time.sleep(5)
 
-    downloaded_books_path = os.path.join(args.dest_folder, "downloaded_books.json")
+    downloaded_books_path = os.path.join(
+        args.dest_folder, "downloaded_books.json"
+    )
     with open(downloaded_books_path, "w", encoding='utf-8') as file:
         json.dump(downloaded_books, file, ensure_ascii=False)
 
