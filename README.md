@@ -44,6 +44,6 @@ python parse_tululu_category.py
 
 ## Objective of the project
 
-The code is written for educational purposes on the online course for web developers [dvmn.org] (https://dvmn.org/)
+The code is written for educational purposes on the online course for web developers [dvmn.org](https://dvmn.org/)
 
 
